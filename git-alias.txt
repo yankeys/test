@@ -1,0 +1,17 @@
+
+
+
+
+$ git config --global alias.st status
+exit:
+alias gd='git diff'
+alias gdca='git diff --cached'
+alias gdct='git describe --tags `git rev-list --tags --max-count=1`'
+alias gdt='git diff-tree --no-commit-id --name-only -r'
+alias gdw='git diff --word-diff'
+
+
+alias gf='git fetch'
+alias gfa='git fetch --all --prune'
+alias gg='git gui citool'
+alias gga='git gui citool --amend'

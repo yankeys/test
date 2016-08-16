@@ -1,0 +1,20 @@
+apache安装
+1、进入cmd，进入安装目录，进行httpd.exe -k install
+2、修改配置文件路径
+3、修改servername  localhost：80
+4、cmd中httpd -t 测试问题
+5、修改配置文件，加载php
+
+
+PHP安装
+1、extension_di修改路径
+2、添加模块   
+	#增加php为系统模块
+	LoadModule php5_module d:/server/php/php5apache2_4.dll
+	#
+	#将.php结尾的文件交由php模块处理
+	AddType application/x-httpd-php .php
+	#
+	#增加PHP配置文件的路径
+	PHPIniDir d:/server/php/php.ini
+
