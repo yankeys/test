@@ -1,7 +1,0 @@
-apache2.2.22有支持ssl的版本
-
-“Non Thread Safe”是IIS专用的，“Thread Safe”才是Apache服务器用的。
-
-php5.6有Apache2.4的支持，但是就会丢失ssl的功能
-
-Apache2.2.22中使用php5apache2_4.dll却不能加载。因为不支持。

@@ -1,2 +1,0 @@
-Host dev.idongpin.com
-  Port 39876

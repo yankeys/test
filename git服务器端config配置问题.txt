@@ -1,3 +1,0 @@
-1.HOST~~`
-2.port
-3.IdentyFile    ~/.ssh/keys/id_rsa         (˽Կ)
