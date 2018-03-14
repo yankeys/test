@@ -1,0 +1,11 @@
+1、建立自己的裸仓（不多说）
+
+2、比如自己想要在project目录下面放自己所有www项目的所有代码，那么就cd进入project
+
+3、直接clone ，在project里面clone本地仓库
+
+4、提示成功后，将自己的apache或者nginx网站根目录地址修改为 ***/project/www
+
+5、每次有新的push在gitlab上通过允许之后，自己登陆服务器，进入/project/www
+
+6、执行git pull命令即可，所有的push变更内容将全部更新。

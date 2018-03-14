@@ -1,0 +1,17 @@
+初始化：自动在home下创建一个 user目录
+	useradd 名字
+	passwd 密码
+
+
+升级：
+	-d /home/goal:表示在goal中创建用户
+		example: useradd -d /home/goal yanyue
+	-g 是为了权限的设置
+
+
+删除用户：
+	userdel 名字
+
+
+修改密码：
+	passwd 名字    然后输入两次密码即可

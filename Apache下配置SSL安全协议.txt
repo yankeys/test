@@ -1,0 +1,74 @@
+第一种方式：
+
+成功安装了Apache以后，接下来需要对Apache的相关配置进行修改使其符合我们的相应需要。Apache的主要配置文件httpd.conf在Apache安装目录的conf文件夹中，默认安装路径为C:		\Program Files\Apache Software Foundation\Apache2.2\conf，打开httpd.conf进行下列操作：
+1、去掉下面语句的注释，即去掉前面的#
+	#LoadModule ssl_module modules/mod_ssl.so 
+2、去掉下面语句的注释，目的是使用Apache自带的ssl配置文件httpd-ssl.conf进行修改，减少我们的工作量。
+	#Include conf/extra/httpd-ssl.conf 
+三. 认证文件生成
+1、将conf目录下的openssl.cnf复制到bin目录下；
+2、在命令行下进入Apache安装目录下\bin文件夹，输入命令：
+	openssl req -new -out server.csr -config openssl.cnf 
+   期间有些需要输入的地方分别如下：
+	Enter PEM pass phrase:                                     (输入密码) 
+	Verifying - Enter PEM pass phrase:                         (再次输入密码) 
+	Country Name (2 letter code) [AU]:                         (国家缩写) 
+	State or Province Name (full name) [Some-State]:           (省名) 
+	Locality Name (eg, city) []:                               (城市名) 
+	Organization Name (eg, company) [Internet Widgits Pty Ltd]:(组织名或者公司名) 
+	Organizational Unit Name (eg, section) []:                 (部门名) 
+	Common Name (eg, YOUR name) []:                            (服务器域名或IP地址) 
+	Email Address []:                                          (邮件地址) 
+	Please enter the following 'extra' attributes 
+	to be sent with your certificate request 
+	A challenge password []:                                   (密码) 
+	An optional company name []:                               (公司别名)
+３、生成私钥，输入命令:
+	openssl rsa -in privkey.pem -out server.key 
+4、创建证书，输入命令:
+	openssl x509 -in server.csr -out server.crt -req -signkey server.key -days 3650 表示创建3650天有效的证书server.crt
+5、将\bin下面的 server.csr 、server.crt、server.key拷贝到httpd-ssl.conf中SSLCertificateFile和SSLCertificateKeyFile语句对应的目录下，例如若为下列路径则拷贝到conf文件夹下
+	SSLCertificateFile "D:/Program Files/Apache Software Foundation/Apache2.2/conf/server.crt" 
+	SSLCertificateKeyFile "D:/Program Files/Apache Software Foundation/Apache2.2/conf/server.key" 
+6、重启Apache服务器；
+7、用浏览器输入服务器IP地址或者域名，例如https:\\192.168.0.1，若出现“It works！”，则配置成功；
+
+
+
+第二种方式
+
+(a)修改httpd.conf
+	为了使apache启动的时候调用ssl的服务，我们需要在配置文件中做一些修改。找到以下两句话并去掉注释，则可以开启apache的时候启动ssl服务：
+	#LoadModule ssl_module modules/mod_ssl.so
+	#Include conf/extra/httpd-mpm.conf  
+(b)修改httpd-ssl.conf
+	修改的主要是我们生成的证书的路径（我把路径设置为conf下的key目录，把生成的证书放进这个目录,接下来会说怎么生成）
+	SSLCertificateFile    xxx/conf/key/server.crt    （服务器证书的位置） 
+	SSLCertificateKeyFile    xxx/conf/key/server.key （服务器私钥的位置） 
+	SSLCACertificateFile    xxx/key/conf/ca.crt      （CA根证书的位置，进行客户端验证时需要)
+	#SSLVerifyClient require               （去掉前面的‘#’号，进行客户端验证时需要） 
+	#SSLVerifyDepth  1                     （去掉前面的‘#’号，把10改为1，进行客户端验证时需要)
+	打开httpd-ssl.conf，ctrl+f 搜关键字修改就可以了。
+3、生成服务端和客户端的证书
+	win+R:cmd进入命令行，进去apache安装目录的bin文件夹，执行命令设置一下openssl的配置：
+	setOPENSSL_CONF=..\conf\openssl.cnf
+(a)生成服务端的私匙
+	执行命令：openssl gensa -out server.key 1024，在目录bin下生成server.key文件
+(b)生成签署申请
+	执行命令：openssl req -new -out server.csr -key server.key -config openssl.cnf，在目录bin下生成server.csr文件,这个过程中要填入一些信息，按照提示要求填就可以了，但是要记住Common Name必须和httpd.conf中的serverName一致，不然apache启动的时候会报错。
+(c)生成CA私匙
+	执行命令：openssl genrsa -out ca.key 1024，在目录bin下生成ca.key文件
+(d)生成CA生成自签署证书
+	执行命令：openssl req -new -x509 -days 365 -key ca.key -out ca.crt -config openssl.cnf，在目录bin下生成ca.crt文件
+(e)生成CA的服务器签署证书
+	执行命令：openssl ca -in server.csr -out server.crt -cert ca.crt -keyfile ca.key -config openssl.cnf 我在这里报错了，按照网上的说法，在当前目录下建立一个demoCA目录，在里面创建一个index.txt空文件，一个名为serial，内容为01的文件，以及一个文件夹newcerts，再执行一次就可以了
+
+4、把当前文件夹中的server.crt，server.key和ca.crt文件复制到步骤2所说的目录conf/key下
+
+5、为了方便，把httpd.conf和httpd-ssl.conf文件中的ServerName分别改为
+	127.0.0.1:8080 (有些软件会占用80这个端口，所以改成8080)
+	127.0.0.1:443
+6、重启apache，执行两个命令net stop Apache2.2和net start Apache2.2，假如遇到apache无法启动的时候，可以选我的电脑-》管理-》事件检查器-》应用程序日志，打开apache的错误报告，会有提示哪里出错了，一般都可以找到原因。
+
+7、打开IE，输入127.0.0.1:8080出现It works。输入https://127.0.0.1:443的时候会弹出一个验证证书的地方，点击取消发现没能成功。上网查了一下，原来还要生成一个 .pfx 的证书并导入到IE中去。
+	打开刚才的命令行，执行命令openssl pkcs12 -export -in ca.crt -inkey ca.key -out ca.pfx，在bin下面生成一个ca.pfx的文件，中间有个输入密码的过程，要记住这个密码。打开IE浏览器-》工具-》Internet选项-》内容-》证书，按照提示导入，这里要输入刚才生成 .pfx 过程中输入的密码。导入之后，打开浏览器输入https://127.0.0.1:443出现 It works。搞掂！！！

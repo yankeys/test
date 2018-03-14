@@ -1,0 +1,42 @@
+lrzsz：
+
+yum install git    yum remove git
+yum update 更新系统
+1.sudo yum install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils-MakeMaker
+2.$ wget https://github.com/git/git/archive/v2.3.0.zip
+  $ unzip v2.3.0.zip
+  $ cd git-2.3.0
+3.
+
+
+find -name failname
+whereis name
+
+
+	ll +名字      查看authority
+
+	rpm -qa       查看所有
+	rpm -ql+名字  查看
+查看系统CPU信息
+	more /proc/cpuinfo | grep "model name" 
+
+
+chown -R user /./   
+_______      getfacl /./      ______    setfacl -x u:name /./   _____   setfacl -m d:u:name:rwx /./
+chown username /./
+chown :gname /./
+
+
+
+chown 
+chmod 555 url.
+
+
+
+usermod -L username锁定
+usermod -U username解锁
+
+
+
+
+chroot详解https://linux.cn/article-3068-1.html

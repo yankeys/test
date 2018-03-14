@@ -1,0 +1,13 @@
+ssh1、ssh2：登陆服务器的密钥加密协议
+
+SSL：https中的保护协议
+
+三次握手
+
+TCP
+UDP
+TCP和UDP是封装在IP里的,IP是网络层协议，TCP和UDP是传输层协议，
+tcp可靠而udp不可靠，用途不同
+
+三层协议：IP（TCP和UDP是封装在IP里）
+四层协议 TCP、UDP

@@ -1,0 +1,113 @@
+**************************账户增加回收站功能******************************
+.bashrc
+注释第5行的别名
+#alias rm='rm -i'
+最后一行添加如下内容
+mkdir -p ~/.trash
+alias rm=trash
+alias r=trash
+alias rl='ls ~/.trash'
+alias ur=undelfile
+undelfile()
+{
+  mv -i ~/.trash/$@ ./
+}
+trash()
+{
+  mv $@ ~/.trash/
+}
+cleartrash()
+{
+    read -p "clear sure?[n]" confirm
+    [ $confirm == 'y' ] || [ $confirm == 'Y' ]  && /bin/rm -rf ~/.trash/*
+}
+重新加载环境变量
+source ~/.bashrc
+**************************2让普通用户也有回收站功能******************************
+etc/profile
+最后一行添加
+mkdir -p ~/.trash
+alias rm=trash
+alias r=trash
+alias rl='ls ~/.trash'
+alias ur=undelfile
+undelfile()
+{
+  mv -i ~/.trash/$@ ./
+}
+trash()
+{
+  mv $@ ~/.trash/
+}
+cleartrash()
+{
+    read -p "clear sure?[n]" confirm
+    [ $confirm == 'y' ] || [ $confirm == 'Y' ]  && /bin/rm -rf ~/.trash/*
+}
+重新加载环境变量
+source /etc/profile
+**************************过了七天自动删除******************************
+直接书写脚本
+#!/bin/bash
+find /root/.trash -ctime 7 -type f -name "*" -exec /bin/rm {} \;
+
+chmod -x ~/cleantrash.sh
+~/cleantrash.sh
+if文件没在当前目录，那么就需要用绝对路径来执行
+
+
+
+
+*****************************自定义回收站功能，模拟*************************
+
+
+自定义回收站功能
+	命令：
+myrm(){ D=/tmp/$(date +%Y%m%d%H%M%S); mkdir -p $D; mv "$@" $D && echo "moved to $D ok"; }
+	输出：
+[root@localhost test]# myrm(){ D=/tmp/$(date +%Y%m%d%H%M%S); mkdir -p $D; 	mv "$@" $D && echo "moved to $D ok"; }
+
+[root@localhost test]# alias rm='myrm'
+
+[root@localhost test]# touch 1.log 2.log 3.log
+
+[root@localhost test]# ll
+
+总计 16
+
+-rw-r--r-- 1 root root    0 10-26 15:08 1.log
+
+-rw-r--r-- 1 root root    0 10-26 15:08 2.log
+
+-rw-r--r-- 1 root root    0 10-26 15:08 3.log
+
+drwxr-xr-x 7 root root 4096 10-25 18:07 scf
+
+drwxrwxrwx 2 root root 4096 10-25 17:46 test3
+
+drwxr-xr-x 2 root root 4096 10-25 17:56 test4
+
+drwxr-xr-x 3 root root 4096 10-25 17:56 test5
+
+[root@localhost test]# rm [123].log
+
+moved to /tmp/20121026150901 ok
+
+[root@localhost test]# ll
+
+总计 16drwxr-xr-x 7 root root 4096 10-25 18:07 scf
+
+drwxrwxrwx 2 root root 4096 10-25 17:46 test3
+
+drwxr-xr-x 2 root root 4096 10-25 17:56 test4
+
+drwxr-xr-x 3 root root 4096 10-25 17:56 test5
+
+[root@localhost test]# ls /tmp/20121026150901/
+
+1.log  2.log  3.log
+
+[root@localhost test]#
+
+说明：
+上面的操作过程模拟了回收站的效果，即删除文件的时候只是把文件放到一个临时目录中，这样在需要的时候还可以恢复过来。

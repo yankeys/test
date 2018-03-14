@@ -1,0 +1,15 @@
+find  最强悍
+	find / 名字或包含字符
+
+	find / -name php.ini
+
+whereis 名字
+
+
+一般是在
+which  名字
+/usr/local:~~~
+
+locate  名字
+
+type  名字

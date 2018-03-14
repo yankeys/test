@@ -1,0 +1,4 @@
+1、最开始使用laravel进行demo开发，使用了artisan serve，一直使用8000端口。等到demo开发完成之后将public转移到apache的根目录发觉提示url错误。网上给出很多答案，但都不符合情况，因为首页能够打开，内页却提示错误，查看错误日志，只是提示404。
+2、查看配置，也没有问题，因为在artisan条件下测试始终没有问题。
+3、最终查证，因为laravel的public下面包含.htaccess配置文件，而apache2.4之后默认是none，不读取该文件。
+4、将AllowOverride All加入到我们的配置文件中。之后重启apache，bingo~

@@ -1,0 +1,7 @@
+7个层级详解
+http://www.cnblogs.com/skyofbitbit/p/3713125.html
+
+http://blog.csdn.net/hai8902882/article/details/8059009
+
+
+应用层-表示层-会话层-传输层-网络层-数据连接层-物理层

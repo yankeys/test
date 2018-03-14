@@ -1,0 +1,22 @@
+最近新装好的mysql在进入mysql工具时，有错误提示:
+# mysql -uroot -p
+Enter password:
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
+
+使用网上介绍的方法修改root用户的密码：
+# mysqladmin -uroot -p password 'newpassword'
+Enter password:
+mysqladmin: connect to server at 'localhost' failed
+error: 'Access denied for user 'root'@'localhost' (using password: YES)'
+
+
+解决方法：
+
+# /etc/init.d/mysql stop
+# mysqld_safe --user=mysql --skip-grant-tables --skip-networking &
+# mysql -u root mysql
+mysql> UPDATE user SET Password=PASSWORD('newpassword') where USER='root';
+mysql> FLUSH PRIVILEGES;
+mysql> quit
+输入mysql -u root -p
+输入新修改的密码成功登录。
